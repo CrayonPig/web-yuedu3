@@ -95,17 +95,31 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      title="请设置连接地址"
+      :visible.sync="dialogChangeBase"
+      width="30%">
+      <el-input v-model="phoneBase" placeholder="请输入手机通知栏显示地址"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogChangeBase = false">取 消</el-button>
+        <el-button type="primary" @click="handleChangeBase">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
 import "../assets/fonts/shelffont.css";
 import Axios from "axios";
+import { setTimeout } from 'timers';
 
 export default {
   data() {
     return {
       search: "",
+      dialogChangeBase: false,
+      phoneBase: '',
       readingRecent: {
         name: "尚无阅读记录",
         url: "",
@@ -114,6 +128,11 @@ export default {
     };
   },
   mounted() {
+    this.baseURL = localStorage.getItem("baseURL");
+    if(!this.baseURL) {
+      this.dialogChangeBase = true
+      return false
+    }
     //获取最近阅读书籍
     let readingRecentStr = localStorage.getItem("readingRecent");
     if (readingRecentStr != null) {
@@ -131,7 +150,7 @@ export default {
           background: "rgb(247,247,247)"
         });
         const that = this;
-        Axios.get("/getBookshelf", {
+        Axios.get(this.baseURL + "/getBookshelf", {
           timeout: 3000
         })
           .then(function(response) {
@@ -154,12 +173,24 @@ export default {
             that.$store.commit("setConnectType", "danger");
             that.$store.commit("setConnectStatus", "连接失败");
             that.$message.error("后端连接失败");
+            this.dialogChangeBase = true
             that.$store.commit("setNewConnect", false);
             throw error;
           });
     }
   },
   methods: {
+    handleChangeBase() {
+      if(!this.phoneBase) {
+        this.$message.error("地址不能为空");
+        return false
+      }
+      localStorage.setItem("baseURL", this.phoneBase);
+      this.$message.success("地址设置成功");
+      setTimeout(() => {
+        location.reload()  
+      }, 1500)
+    },
     setIP() {
     },
     toDetail(bookUrl, bookName, chapterIndex) {

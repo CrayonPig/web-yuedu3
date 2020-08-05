@@ -11,6 +11,7 @@ import {
   Popover,
   Loading,
   Input,
+  Dialog,
   Tag
 } from "element-ui";
 
@@ -23,6 +24,7 @@ Vue.use(TableColumn);
 Vue.use(Popover);
 Vue.use(Input);
 Vue.use(Tag);
+Vue.use(Dialog);
 Vue.use(Loading.directive);
 
 Vue.prototype.$msgbox = MessageBox;

@@ -39,8 +39,9 @@ export default {
     };
   },
   mounted() {
+    this.baseURL = localStorage.getItem("baseURL");
     const that = this;
-    Axios.get(
+    Axios.get(this.baseURL + 
       "/getChapterList?url=" +
         encodeURIComponent(sessionStorage.getItem("bookUrl"))
     ).then(

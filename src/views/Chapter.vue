@@ -128,6 +128,7 @@ export default {
     if (config != null) this.$store.commit("setConfig", config);
   },
   mounted() {
+    this.baseURL = localStorage.getItem("baseURL");
     this.loading = this.$loading({
       target: this.$refs.content,
       lock: true,
@@ -310,7 +311,7 @@ export default {
   },
   methods: {
     getCatalog(bookUrl) {
-      return Axios.get(
+      return Axios.get(this.baseURL + 
           "/getChapterList?url=" +
           encodeURIComponent(bookUrl)
       );
@@ -340,7 +341,7 @@ export default {
       //强制滚回顶层
       jump(this.$refs.top, { duration: 0 });
       let that = this;
-      Axios.get(
+      Axios.get(this.baseURL + 
         "/getBookContent?url=" +
           encodeURIComponent(bookUrl) + "&index=" + chapterIndex
       ).then(
